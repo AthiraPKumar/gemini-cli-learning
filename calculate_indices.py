@@ -1,0 +1,85 @@
+text = """CS229 Course Notes Summaries
+
+Part I: Supervised learning
+
+Chapter 1: Linear Regression
+This chapter introduces the fundamental supervised learning problem of predicting continuous target variables. It focuses on the linear hypothesis h(x) = θᵀx and the ordinary least squares (OLS) cost function, which measures the squared error between predictions and actual values. To find the optimal parameters θ, the text details the gradient descent algorithm—specifically the Batch Gradient Descent and the Stochastic Gradient Descent (LMS) update rules—noting that for linear regression, the cost function is a convex quadratic, ensuring convergence to a global minimum.
+
+Chapter 2: Classification and Logistic Regression
+Moving from continuous to discrete predictions, this chapter covers binary classification where the target variable y takes on values like 0 and 1. It introduces the logistic (or sigmoid) function to map linear combinations of features to a probability space [0, 1], allowing the model to represent P(y=1|x;θ). The chapter also briefly touches upon locally weighted linear regression, a non-parametric algorithm that assigns weights to training examples based on their proximity to the query point, allowing for more flexible, non-linear fits of the data.
+
+Chapter 3: Generalized Linear Models (GLMs)
+Generalized Linear Models provide a unifying framework for various learning algorithms by assuming that the target variable follows a distribution from the Exponential Family (such as Gaussian, Bernoulli, or Poisson). The chapter outlines three key design choices: the conditional distribution of y given x, the goal of predicting the expected value of the sufficient statistic, and the linear relationship between the natural parameter η and the inputs x. By following these assumptions, both Ordinary Least Squares and Logistic Regression are elegantly derived as specific instances of GLMs.
+
+Chapter 4: Generative Learning Algorithms
+This chapter distinguishes between discriminative algorithms, which model p(y|x) directly, and generative algorithms, which model p(x|y) and p(y) to derive the posterior p(y|x) via Bayes' Rule. It explores Gaussian Discriminant Analysis (GDA), where the class-conditional distributions are modeled as multivariate normals with a shared covariance matrix. Additionally, it introduces the Naive Bayes classifier, which assumes features are conditionally independent given the class label, making it a simple yet effective tool for high-dimensional data like text classification.
+
+Chapter 5: Kernel Methods
+Kernel methods extend linear algorithms to capture non-linear patterns by mapping input attributes into a higher-dimensional feature space using a feature map ϕ(x). The "kernel trick" is the core innovation here, allowing algorithms to operate in these complex spaces without ever explicitly computing the high-dimensional vectors, provided the algorithm only relies on inner products. This enables efficient computation even in infinite-dimensional spaces, "magically" transforming linear models into powerful non-linear ones.
+
+Chapter 6: Support Vector Machines (SVMs)
+Support Vector Machines are presented as one of the most powerful "off-the-shelf" supervised learning algorithms, centered on the concept of maximizing the margin between classes. By finding the "optimal margin classifier," SVMs seek a decision boundary that stays as far as possible from the nearest training examples, thereby increasing the confidence and robustness of the predictions. The chapter formalizes these ideas through functional and geometric margins and introduces a new notation using y ∈ {-1, 1} and parameters (w, b) to separate the intercept term.
+
+Part II: Deep learning
+
+Chapter 7: Deep Learning
+This chapter transitions into non-linear models where the hypothesis h(x) is non-linear in both the parameters and the inputs, specifically through Neural Networks. It outlines the general framework for deep learning: defining the network architecture, choosing a loss function (such as mean-squared error for regression or cross-entropy for classification), and optimizing the parameters using Stochastic Gradient Descent (SGD) or its mini-batch variants. This sets the stage for using the backpropagation algorithm to efficiently compute the gradients needed for training these complex models.
+
+Part III: Generalization and regularization
+
+Chapter 8: Generalization
+This chapter discusses how models perform on unseen data, moving beyond just minimizing training loss. It introduces the concept of the "generalization gap"—the difference between training and test error—and explains overfitting and underfitting. The chapter also explores the bias-variance tradeoff and the "double descent" phenomenon, where model performance can improve again as complexity increases past a certain point.
+
+Chapter 9: Regularization and Model Selection
+Regularization is presented as a technique to control model complexity and prevent overfitting by adding a penalty term (like the ℓ₂ norm) to the loss function. This allows for a better bias-variance tradeoff even in models with many parameters. The chapter also covers model selection techniques like cross-validation and the Bayesian interpretation of regularization.
+
+Part IV: Unsupervised learning
+
+Chapter 10: Clustering and the k-means Algorithm
+This chapter introduces unsupervised learning, specifically clustering, where the goal is to find structure in unlabeled data. The k-means algorithm is detailed as an iterative process that alternates between assigning points to the nearest cluster centroid and updating the centroids based on the assigned points.
+
+Chapter 11: EM Algorithms
+The Expectation-Maximization (EM) algorithm is a general framework for density estimation with latent variables, such as in Gaussian Mixture Models (GMMs). It consists of an E-step, which "guesses" the values of latent variables, and an M-step, which updates the model parameters to maximize the likelihood of the data given those guesses.
+
+Chapter 12: Principal Components Analysis (PCA)
+PCA is a dimensionality reduction technique that identifies the subspace where data approximately lies by finding directions of maximum variance. It is used for data compression, visualization, and as a preprocessing step to reduce noise and help avoid overfitting in supervised learning.
+
+Chapter 13: Independent Components Analysis (ICA)
+Unlike PCA, which finds orthogonal directions of variance, ICA aims to separate a signal into its original, independent sources (the "cocktail party problem"). It assumes that the observed data is a linear mixture of independent, non-Gaussian sources and seeks an unmixing matrix to recover them.
+
+Chapter 14: Self-supervised Learning and Foundation Models
+This chapter covers the shift towards "foundation models" (like GPT or BERT) that are pre-trained on massive unlabeled datasets using self-supervised tasks. These models learn general representations that can then be adapted to specific downstream tasks with very little labeled data through methods like linear probing or fine-tuning.
+
+Part V: Reinforcement Learning and Control
+
+Chapter 15: Reinforcement Learning
+Reinforcement Learning deals with agents learning to make decisions in an environment to maximize cumulative rewards. It formalizes problems using Markov Decision Processes (MDPs) and introduces key concepts like value functions, policies, and the Bellman equations, which are used to find optimal behaviors through value or policy iteration.
+
+Chapter 16: LQR, DDP and LQG
+This chapter focuses on control in continuous or finite-horizon settings. It introduces Linear Quadratic Regulation (LQR) for linear systems with quadratic costs and explores extensions like Differential Dynamic Programming (DDP) for non-linear dynamics and Linear Quadratic Gaussian (LQG) for systems with noise.
+
+Chapter 17: Policy Gradient (REINFORCE)
+Policy gradient methods directly optimize the parameters of a policy to maximize expected rewards using gradient ascent. The REINFORCE algorithm is a classic example that uses Monte Carlo samples to estimate the gradient of the performance objective, allowing the agent to learn complex behaviors without knowing the environment's transition probabilities.
+"""
+
+import re
+
+lines = text.split('\n')
+current_index = 1
+formats = []
+
+# Title is the first line
+title = lines[0]
+formats.append({"startIndex": current_index, "endIndex": current_index + len(title), "style": "heading1"})
+
+for line in lines:
+    if line.startswith("Part"):
+        formats.append({"startIndex": current_index, "endIndex": current_index + len(line), "style": "heading2"})
+    elif line.startswith("Chapter"):
+        formats.append({"startIndex": current_index, "endIndex": current_index + len(line), "style": "heading3"})
+        formats.append({"startIndex": current_index, "endIndex": current_index + len(line), "style": "bold"})
+    
+    current_index += len(line) + 1 # +1 for newline
+
+import json
+print(json.dumps(formats, indent=2))
